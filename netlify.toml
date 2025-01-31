@@ -1,10 +1,6 @@
 [build]
-  functions = "functions"
-[[redirects]]
-from = "/api/{target-host}/{target-path}"
-to = "/{target-host}/{target-path}"
-status = 200
+functions = "functions"
 
 [[functions]]
-path = "/{target-host}/{target-path}"
+path = "/api/*"
 script = "functions/proxy.js"
