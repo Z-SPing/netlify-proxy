@@ -1,8 +1,11 @@
+// proxy.js
+
 exports.handler = async function(event, context) {
   try {
     const url = new URL(event.request.url);
     const pathname = url.pathname;
 
+    // 处理根路径请求
     if (pathname === '/' || pathname === '/index.html') {
       return {
         statusCode: 200,
@@ -13,9 +16,11 @@ exports.handler = async function(event, context) {
       };
     }
 
+    // 构建目标URL
     const targetHost = 'https://api.groq.com/openai';
     const targetUrl = new URL(pathname, targetHost).href;
 
+    // 处理请求头
     const allowedHeaders = ['accept', 'content-type', 'authorization'];
     const headers = new Headers();
     for (const [key, value] of Object.entries(event.request.headers)) {
@@ -24,12 +29,14 @@ exports.handler = async function(event, context) {
       }
     }
 
+    // 转发请求
     const response = await fetch(targetUrl, {
       method: event.request.method,
       headers: headers,
       body: event.request.body,
     });
 
+    // 处理响应头
     const responseHeaders = new Headers(response.headers);
     responseHeaders.set('Referrer-Policy', 'no-referrer');
 
