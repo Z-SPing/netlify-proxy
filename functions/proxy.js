@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
-//  const targetUrl = 'https://api.groq.com/openai';
-  const targetUrl = 'https://api.groq.com/';
+ const targetUrl = 'https://api.groq.com/openai';
+//  const targetUrl = 'https://api.groq.com/';
   const { method, headers, body } = event;
 
   const options = {
