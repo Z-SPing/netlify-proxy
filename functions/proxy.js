@@ -12,17 +12,17 @@ exports.handler = async (event) => {
     }
   });
 
-  let requestBody = body;
-  if (method === 'GET' || method === 'HEAD') {
-    requestBody = null; // Remove request body for GET/HEAD requests
+  const fetchOptions = {
+    method,
+    headers: forwardedHeaders,
+  };
+
+  if (method !== 'GET' && method !== 'HEAD') {
+    fetchOptions.body = body;
   }
 
   try {
-    const response = await fetch(targetUrl, {
-      method,
-      headers: forwardedHeaders,
-      body: requestBody,
-    });
+    const response = await fetch(targetUrl, fetchOptions);
 
     // ...
   } catch (error) {
