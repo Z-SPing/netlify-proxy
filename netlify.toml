@@ -2,5 +2,5 @@
 functions = "functions"
 
 [[functions]]
-path = "/api/{target-host}/{target-path}"
+path = "/api/*"
 script = "functions/proxy.js"
