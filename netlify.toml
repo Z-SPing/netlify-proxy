@@ -1,2 +1,20 @@
-[functions]
-  proxy = "proxy.js"
+# Netlify Configuration File
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[functions]]
+  name = "proxy"
+  path = "/proxy.js"
+  allowed_http_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://api.groq.com/openai/:splat"
+  status = 200
+
+[env]
+  # 可以在此处添加环境变量，如果函数需要访问特定的变量
+  # 例如：
+  # TARGET_API = "https://api.groq.com/openai"
