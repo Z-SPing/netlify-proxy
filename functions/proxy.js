@@ -32,11 +32,12 @@ exports.handler = async (event) => {
         responseBody += chunk;
       });
       res.on('end', () => {
-        return {
+        const response = {
           statusCode: res.statusCode,
           headers: res.headers,
           body: responseBody,
         };
+        return response; // <--- Return statement should be here
       });
     });
 
