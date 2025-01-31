@@ -4,8 +4,7 @@
   command = "npm run build"
   publish = "dist"
 
-[[functions]]
-  name = "proxy"
+[functions.proxy]
   path = "/proxy.js"
   allowed_http_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 
