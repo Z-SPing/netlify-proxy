@@ -12,13 +12,18 @@ exports.handler = async (event) => {
     }
   });
 
-  const fetchOptions = {
-    method,
-    headers: forwardedHeaders,
-  };
-
-  if (method !== 'GET' && method !== 'HEAD') {
-    fetchOptions.body = body;
+  let fetchOptions;
+  if (method === 'GET' || method === 'HEAD') {
+    fetchOptions = {
+      method,
+      headers: forwardedHeaders,
+    };
+  } else {
+    fetchOptions = {
+      method,
+      headers: forwardedHeaders,
+      body,
+    };
   }
 
   try {
