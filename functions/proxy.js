@@ -1,11 +1,14 @@
 exports.handler = async (event) => {
   const { method, headers, body, path } = event;
 
+  console.log(`Received request: ${method} ${path}`);
+
   // Remove the proxy path from the original URL
   const originalPath = path.replace(/^\/\.netlify\/functions\/proxy/, '');
 
   // Construct the final URL by adding the original path to the target URL
   const targetUrl = `https://api.groq.com/openai${originalPath}`;
+  console.log(`Target URL: ${targetUrl}`);
 
   // Create a new headers object to forward selected headers
   const forwardedHeaders = new Headers();
@@ -15,6 +18,7 @@ exports.handler = async (event) => {
       forwardedHeaders.set(key, value);
     }
   });
+  console.log(`Forwarded headers: ${JSON.stringify(forwardedHeaders)}`);
 
   try {
     // Forward the request to the target API endpoint
@@ -23,6 +27,7 @@ exports.handler = async (event) => {
       headers: forwardedHeaders,
       body,
     });
+    console.log(`Response status: ${response.status}`);
 
     // Create a new response object to return to the client
     const responseBody = await response.text();
@@ -35,7 +40,7 @@ exports.handler = async (event) => {
       body: responseBody,
     };
   } catch (error) {
-    console.error('Failed to fetch:', error);
+    console.error(`Failed to fetch: ${error}`);
     return {
       statusCode: 500,
       body: 'Internal Server Error',
