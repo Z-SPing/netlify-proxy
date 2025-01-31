@@ -1,6 +1,6 @@
 [build]
 functions = "functions"
 
-[[functions]]
+[functions]
 path = ["/api/*"]
 script = ["functions/proxy.js"]
