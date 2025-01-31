@@ -1,58 +1,50 @@
-// proxy.js
+const fetch = require('node-fetch');
 
-exports.handler = async function(event, context) {
+exports.handler = async (event, context) => {
+  const { httpMethod, headers, body, queryStringParameters } = event;
+
+  // 构建目标API的URL
+  const targetUrl = 'https://api.groq.com/openai';
+
+  // 设置请求选项
+  const requestOptions = {
+    method: httpMethod,
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+  };
+
+  if (body) {
+    requestOptions.body = body;
+  }
+
+  if (queryStringParameters) {
+    const queryParams = new URLSearchParams(queryStringParameters).toString();
+    targetUrl += `?${queryParams}`;
+  }
+
   try {
-    const url = new URL(event.request.url);
-    const pathname = url.pathname;
+    // 发送请求到目标API
+    const response = await fetch(targetUrl, requestOptions);
 
-    // 处理根路径请求
-    if (pathname === '/' || pathname === '/index.html') {
-      return {
-        statusCode: 200,
-        body: 'Proxy is Running！Details：https://github.com/tech-shrimp/deno-api-proxy',
-        headers: {
-          'Content-Type': 'text/html',
-        },
-      };
-    }
+    // 获取响应数据
+    const responseData = await response.text();
 
-    // 构建目标URL
-    const targetHost = 'https://api.groq.com/openai';
-    const targetUrl = new URL(pathname, targetHost).href;
-
-    // 处理请求头
-    const allowedHeaders = ['accept', 'content-type', 'authorization'];
-    const headers = new Headers();
-    for (const [key, value] of Object.entries(event.request.headers)) {
-      if (allowedHeaders.includes(key.toLowerCase())) {
-        headers.set(key, value);
-      }
-    }
-
-    // 转发请求
-    const response = await fetch(targetUrl, {
-      method: event.request.method,
-      headers: headers,
-      body: event.request.body,
-    });
-
-    // 处理响应头
-    const responseHeaders = new Headers(response.headers);
-    responseHeaders.set('Referrer-Policy', 'no-referrer');
-
+    // 返回响应
     return {
       statusCode: response.status,
-      body: await response.blob(),
-      headers: Object.fromEntries(responseHeaders),
+      headers: {
+        'Content-Type': response.headers.get('content-type') || 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: responseData,
     };
   } catch (error) {
-    console.error('Failed to fetch:', error);
+    console.error('Error in proxy:', error);
     return {
       statusCode: 500,
-      body: 'Internal Server Error',
-      headers: {
-        'Content-Type': 'text/plain',
-      },
+      body: JSON.stringify({ error: 'An error occurred while proxying the request' }),
     };
   }
 };
