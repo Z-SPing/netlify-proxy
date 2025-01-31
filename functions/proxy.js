@@ -1,8 +1,7 @@
 exports.handler = async (event) => {
   const { method, headers, body, path } = event;
 
-  // ...
-
+  const originalPath = path.replace(/^\/\.netlify\/functions\/proxy/, '');
   const targetUrl = `https://api.groq.com/openai${originalPath}`;
 
   const forwardedHeaders = new Headers();
