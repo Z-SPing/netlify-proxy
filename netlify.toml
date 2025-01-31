@@ -5,3 +5,6 @@
   from = "/api/*"
   to = "/.netlify/functions/proxy"
   status = 200
+[[functions]]
+path = "/{target-host}{target-path}"
+script = "functions/proxy.js"
