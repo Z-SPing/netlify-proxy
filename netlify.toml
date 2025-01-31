@@ -1,12 +1,7 @@
 [build]
-  publish = "public"
+  functions = "functions"
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/proxy"
   status = 200
-
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
