@@ -1,8 +1,9 @@
 exports.handler = async (event) => {
   const { httpMethod, path, headers, body } = event;
 
-  const targetPath = `https://api.groq.com/openai${path}`;
-
+ // const targetPath = `https://api.groq.com/openai${path}`;
+const targetPath = `https://api.groq.com/openai/v1/chat/completions${path}`;
+  
   try {
     // 根据HTTP方法判断是否需要请求体
     const hasBody = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(httpMethod);
