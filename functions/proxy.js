@@ -10,11 +10,11 @@ exports.handler = async (event) => {
   // Create a new headers object to forward selected headers
   const forwardedHeaders = new Headers();
   const allowedHeaders = ['accept', 'content-type', 'authorization'];
-  for (const [key, value] of headers.entries()) {
+  Object.entries(headers).forEach(([key, value]) => {
     if (allowedHeaders.includes(key.toLowerCase())) {
       forwardedHeaders.set(key, value);
     }
-  }
+  });
 
   try {
     // Forward the request to the target API endpoint
