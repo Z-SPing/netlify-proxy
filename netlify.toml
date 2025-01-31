@@ -1,2 +1,7 @@
-[functions]
-  proxy = "./functions/proxy.js"
+[build]
+  functions = "functions"  # 指定函数文件夹路径
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/proxy"  # 将请求路由到函数
+  status = 200
