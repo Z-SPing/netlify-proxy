@@ -1,7 +1,12 @@
 exports.handler = async (event) => {
- const targetUrl = 'https://api.groq.com/openai';
-//  const targetUrl = 'https://api.groq.com/';
-  const { method, headers, body } = event;
+  const targetUrl = 'https://api.groq.com/openai';
+  const { method, headers, body, path } = event;
+
+  // Remove the proxy path from the original URL
+  const originalPath = path.replace(/^\/\.netlify\/functions\/proxy/, '');
+
+  // Construct the final URL by adding the original path to the target URL
+  const finalUrl = `${targetUrl}${originalPath}`;
 
   const options = {
     method,
@@ -15,7 +20,7 @@ exports.handler = async (event) => {
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(targetUrl, options);
+  const response = await fetch(finalUrl, options);
   const responseBody = await response.text();
 
   return {
