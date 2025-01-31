@@ -1,10 +1,10 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
-  const { httpMethod, headers, body, queryStringParameters } = event;
+  const { httpMethod, headers, body, path } = event;
 
-  // 构建目标API的URL
-  const targetUrl = 'https://api.groq.com/openai';
+  // 构建目标 API 的 URL
+  const targetUrl = `https://api.groq.com/openai${path}`;
 
   // 设置请求选项
   const requestOptions = {
@@ -13,19 +13,11 @@ exports.handler = async (event, context) => {
       ...headers,
       'Content-Type': 'application/json',
     },
+    body: body ? JSON.stringify(JSON.parse(body)) : undefined,
   };
 
-  if (body) {
-    requestOptions.body = body;
-  }
-
-  if (queryStringParameters) {
-    const queryParams = new URLSearchParams(queryStringParameters).toString();
-    targetUrl += `?${queryParams}`;
-  }
-
   try {
-    // 发送请求到目标API
+    // 发送请求到目标 API
     const response = await fetch(targetUrl, requestOptions);
 
     // 获取响应数据
@@ -36,7 +28,6 @@ exports.handler = async (event, context) => {
       statusCode: response.status,
       headers: {
         'Content-Type': response.headers.get('content-type') || 'application/json',
-        'Access-Control-Allow-Origin': '*',
       },
       body: responseData,
     };
