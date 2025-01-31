@@ -1,6 +1,2 @@
-[build]
-functions = "functions"
-
-[functions]
-path ="/api/*"
-script = "functions/proxy.js"
+[settings]
+  redirect = {from = "/api/*", to = "https://api.groq.com/openai/:path"}
